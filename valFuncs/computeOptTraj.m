@@ -27,7 +27,7 @@ end
 % Default parameters
 uMode = 'min';
 visualize = false;
-subSamples = 4;
+subSamples = 10;
 
 if isfield(extraArgs, 'uMode')
   uMode = extraArgs.uMode;
@@ -78,14 +78,16 @@ while iter <= tauLength
   upper = tauLength;
   lower = tEarliest;
   
-  tEarliest = lower; %find_earliest_BRS_ind(g, data, dynSys.x, upper, lower);
+  tEarliest = find_earliest_BRS_ind(g, data, dynSys.x, upper, lower);
    
   % BRS at current time
   BRS_at_t = data(clns{:}, tEarliest);
-  
+%   if eval_u(g,BRS_at_t,dynSys.x) > 0
+%       warning('left reachable set')
+%   end
   % Visualize BRS corresponding to current trajectory point
   if visualize
-    plot(traj(showDims(1), iter), traj(showDims(2), iter), 'k.')
+    plot(traj(showDims(1), iter), traj(showDims(2), iter), 'ko')
     hold on
     [g2D, data2D] = proj(g, BRS_at_t, hideDims, traj(hideDims,iter));
     visSetIm(g2D, data2D);
